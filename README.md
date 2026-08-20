@@ -4,10 +4,7 @@
 [![Python](https://img.shields.io/badge/python-3.12-blue)](https://www.python.org/)
 
 > 📄 Code and full experimental results for:
-> **Robust Multi-Label Classification via Preference Learning** —
-> Vu-Linh Nguyen, Xuan-Truong Hoang, Sébastien Destercke, Cassio de Campos,
-> Van-Nam Huynh (Nguyen and Hoang contributed equally).
-> *Machine Learning* (Springer), 2026. \<TODO: DOI once assigned\>
+
 
 > **Abstract.**
 
