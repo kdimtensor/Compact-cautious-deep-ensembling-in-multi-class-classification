@@ -1,4 +1,4 @@
-# Compact set-valued deep ensembling in multi-class classification
+# Compact cautious deep ensembling in multi-class classification
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.12-blue)](https://www.python.org/)
