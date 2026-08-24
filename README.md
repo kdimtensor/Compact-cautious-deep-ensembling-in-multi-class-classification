@@ -12,7 +12,7 @@
 
 ## Quick start
 
-The pipeline has four stages, and each stage must be run from **inside its own
+The pipeline has three stages, and each stage must be run from **inside its own
 directory** (all paths in the code are relative to the script's directory):
 
 ```
@@ -26,7 +26,6 @@ data_preprocess/  →  trained_model/  →  Optimal_prediction/
 ```bash
 # conda (recommended — reproduces the exact environment: Python 3.10, torch 2.8)
 conda env create -f environment.yml
-conda activate BNN
 
 # or pip, into an existing Python 3.10+ environment
 pip install -r requirements.txt
@@ -214,17 +213,6 @@ data/
         ├── Bayes/{model/, *.csv, tensor_output_*.npy, all_p_star_*.npy, set_output/}
         └── Drop_out/{...}
 ```
-
-Disk usage is dominated by the `.npy` dumps: ≈2 GB for CIFAR-10, ≈0.6 GB for
-Fashion-MNIST, and ≈150 KB per image per copy for LEAF (224×224×3, clean +
-corrupted) — several GB for a typical leaf collection. `gaussian_noise_1_6/`
-can be deleted once `gaussian_noise_6/` exists.
-
-> **Known issue (LEAF).** `split_fold_leaf.py` saves
-> `data_clean_train_6` / `data_c_train_6` / `label_train_6`, which are never
-> assigned (`make_leaf_c.py` already emits a single severity), so the script
-> raises `NameError` before the fold split. Save the loaded arrays
-> `data_clean_train` / `data_c_train` / `label_train` instead.
 
 ## Repository layout
 
