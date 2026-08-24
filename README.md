@@ -85,7 +85,7 @@ Python entry points directly):
 | `--num_mc` / `--num_monte_carlo` | all | number of ensemble members during training / at inference |
 | `--p` | dropout only | dropout rate |
 
-### 3. Optimal precise prediction
+### 3. Precise prediction
 
 ```bash
 cd optimal_prediction
@@ -106,12 +106,11 @@ step 2.
 ```bash
 python cifar_set_valued_prediction.py --model_type Bayes --train_type clean --test_type clean
 python cifar_set_valued_prediction.py --model_type Bayes --train_type clean --test_type c
+python fmnist_set_valued_prediction.py --model_type Drop_out --train_type c --test_type clean
+python leaf_set_valued_prediction.py --model_type Drop_out --train_type c --test_type c
 ```
 
-`find_a_range()` derives the admissible range of the discount parameter α from
-the reward matrix and sweeps 20 values over it. For each α, `idc()` ranks the
-classes by reward-weighted `p*` and grows the predicted set while the
-discounted expected utility `g(k) = α/k + (1−α)/k²` keeps increasing. Results
+Set-valued predictions can be made with or without reward sensitivity. Use --model_type to change between Bayes/Drop_out, --train_type to select models trained with clean/c dataset, and --test_type to test the models with clean/c (clean or noisy dataset) Results
 are averaged over the 3 folds and written as `mean : std` strings to:
 
 ```
@@ -120,20 +119,10 @@ data/<DATA>-C/gaussian_<train_type>_fold/<model_type>/set_output/
     <test_type>_set_value_prediction.txt   # the α values that were swept
 ```
 
-Reported per α and per discrepancy (SED / L1D / KLD): precise-prediction
-utility, set-valued utility, average cardinality of the non-singleton sets and
-their proportion, recall, the share of correct singletons and of correct sets,
-and the full precise-vs-set-valued confusion breakdown.
-
-> The reward / sensitivity matrix `m_metric` is **hard-coded at the bottom of
-> each script in `Optimal_prediction/`** (identity = plain 0/1 rewards,
-> `sensitivities 1` = the reward-sensitive variant, kept commented out). Use
-> the same matrix in the precise and the set-valued script of a given run.
-
 ## Datasets
 
-Three image classification benchmarks are used, each in a *clean* and a
-*Gaussian-corrupted* version of the **same** images with the **same** labels,
+Three image dataset are used, each in a clean and a
+Gaussian-corrupted version of the same images with the same labels,
 so that a model can be trained on one stream and evaluated on both.
 
 | Dataset | Source | Classes | Input | Working root |
@@ -144,7 +133,7 @@ so that a model can be trained on one stream and evaluated on both.
 
 LEAF is not downloadable from the code: place it yourself as an
 `ImageFolder` tree, one sub-directory per class, before running
-`leaf_data_preparation.sh`:
+`leaf_data_preparation.sh` (before step 1):
 
 ```
 data/LEAF/
@@ -171,7 +160,7 @@ and generates that severity directly.
 `KFold(n_splits=3, shuffle=True, random_state=42)` over the pooled
 train+test set gives the indices used by every model and every stage. They are
 stored once, in `data/<DATA>-C/k_fold_id/`, and re-loaded by the training,
-testing and evaluation scripts — never recomputed.
+testing and evaluation scripts.
 
 | | stacked (5 severities) | kept (severity 6) | pooled for CV | per fold (train / test) |
 | --- | --- | --- | --- | --- |
@@ -200,7 +189,7 @@ data/
 ## Repository layout
 
 ```
-compact/
+main/
 ├── environment.yml                     # exact conda environment (Python 3.10, torch 2.8)
 ├── requirements.txt                    # minimal pip dependencies
 │
