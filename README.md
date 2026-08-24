@@ -3,22 +3,17 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.10-blue)](https://www.python.org/)
 
-> 📄 Code and full experimental results for:
+We tackle visible challenges in deep ensemble learning, where deep neural networks serve as ensemble members: training and storage burdens, and robustness of cautious (set-valued) predictions targeting multiple utilities, which may involve reward-sensitivity. To mitigate the training and storage burdens, we propose to employ compact ensembles, such as Bayesian Neural Networks and Convolutional Neural Networks with the Monte-Carlo dropout prediction option, to produce probabilistic predictions. For each query instance, these probabilistic predictions are then used to define a representative distribution optimizing some statistical distance. The representative distribution is then employed to define the Bayes-optimal prediction of any utility. To address the potential unrobustness of singleton prediction making, we propose a family of set-utilities satisfying some desirable properties and whose set-valued Bayes-optimal predictions can be found efficiently. 
 
+## Summary
 
-> **Abstract.**
-
-## What it does
-
-## Quick start
-
-The pipeline has three stages, and each stage must be run from **inside its own
-directory** (all paths in the code are relative to the script's directory):
+The processing pipeline has three stages and each stage must be run from inside its own
+directory (all paths in the code are relative to the script's directory):
 
 ```
-data_preprocess/  →  trained_model/  →  Optimal_prediction/
-   build data        train + dump         p* + decisions
-                     MC softmax
+data_preprocessing/  →  model_training/  →  optimal_prediction/
+add noise               train models        make predictions
+split 3-folds           save models         
 ```
 
 ### 0. Environment
@@ -35,10 +30,10 @@ A CUDA GPU is expected (the shipped shell scripts set `CUDA_VISIBLE_DEVICES`),
 but every entry point falls back to CPU when `torch.cuda.is_available()` is
 `False`.
 
-### 1. Build the corrupted datasets and the cross-validation folds
+### 1. Make noisy datasets and split cross-validation folds
 
 ```bash
-cd data_preprocess
+cd data_preprocessing
 
 bash cifar_data_preparation.sh    # CIFAR-10   (downloads the raw data)
 bash fmnist_data_preparation.sh   # Fashion-MNIST (downloads the raw data)
@@ -46,33 +41,27 @@ bash leaf_data_preparation.sh     # LEAF (raw images must already be in ../data/
 ```
 
 Each script runs `make_<dataset>_c.py` (adds Gaussian noise, saves clean/noisy
-`.npy` pairs) followed by `split_fold_<dataset>.py` (keeps the strongest
-severity and writes the 3-fold indices). See [Datasets](#datasets) for what
+`.npy` pairs) followed by `split_fold_<dataset>.py` (writes the 3-fold indices). See [Datasets](#datasets) for what
 lands on disk.
 
-### 2. Train the ensembles and dump the Monte-Carlo outputs
+### 2. Train and save models
 
 ```bash
-cd trained_model
+cd model_training
 
-# Bayesian (variational) ensemble
+# Bayesian neural network
 bash train_bayesian_cifar.sh      # then
 bash test_bayesian_cifar.sh
 
-# MC-dropout ensemble
+# Convolutional neural network with Monte-Carlo dropout
 bash train_cnndropout_cifar.sh    # then
 bash test_cnndropout_cifar.sh
 ```
 
-The same pairs exist for `fmnist` and `leaf`. Training loops over the 3 folds
-and keeps, per fold, the checkpoint with the best validation accuracy on the
-noisy stream and the one with the best accuracy on the clean stream; per-epoch
-losses/accuracies go to a CSV next to the checkpoints.
+Training loops over the 3 folds
+and keeps, per fold, the models.
 
-`test_*.sh` reloads a checkpoint and runs `--num_monte_carlo` (default 100)
-stochastic forward passes over the held-out fold — sampled weights for the
-Bayesian models, dropout kept active at inference for the MC-dropout models —
-then writes the softmax ensemble to disk:
+`test_*.sh` reloads a checkpoint and runs `--num_monte_carlo` (number of ensemble members, default 100) forward passes over the held-out fold then writes the ensemble outputs to disk:
 
 | File (per fold, in `data/<DATA>-C/gaussian_<train_type>_fold/<Bayes\|Drop_out>/`) | Shape |
 | --- | --- |
@@ -88,35 +77,29 @@ Python entry points directly):
 
 | Flag | Where | Meaning |
 | --- | --- | --- |
-| `--mode train\|test` | all | required; train a fold set or dump MC outputs |
-| `--train-type clean\|noise` | all | train on the clean or the corrupted copy; also selects the output sub-directory |
-| `--k-fold` | all | number of CV folds (default 3, must match step 1) |
-| `--arch` / `--model_name` | Bayesian / dropout | `resnet20`, `CNNs` (F-MNIST) / `resnet18`, `resnet18_dropout` |
-| `--epochs`, `--lr`, `--batch-size` (`--batch_size` for the dropout scripts) | all | optimisation settings |
-| `--num_mc` / `--num_monte_carlo` | all | MC samples during training / at inference |
+| `--mode train\|test` | all | required, train or test a model |
+| `--train-type clean\|noise` | all | train on the clean or the corrupted data |
+| `--k-fold` | all | number of cross validation folds (default 3, must match step 1) |
+| `--arch` / `--model_name` | Bayesian / dropout | select a base learner, default `resnet20` / `resnet18` |
+| `--epochs`, `--lr`, `--batch-size` (`--batch_size` for the dropout scripts) | all | optimization settings |
+| `--num_mc` / `--num_monte_carlo` | all | number of ensemble members during training / at inference |
 | `--p` | dropout only | dropout rate |
 
-The shipped scripts are configured as a smoke test (`epochs=5`); raise it for
-real runs. Note also that the dropout scripts train with `dropout_rate=0` and
-test with `p=0.02`, i.e. the ensemble spread is injected at inference time.
-
-### 3. Optimal precise prediction (p\*)
+### 3. Optimal precise prediction
 
 ```bash
-cd Optimal_prediction
+cd optimal_prediction
 
 python cifar_precise_prediction.py --model_type Bayes --train_type clean
+python fmnist_precise_prediction.py --model_type Bayes --train_type clean
+python leaf_precise_prediction.py --model_type Bayes --train_type clean
 ```
 
-For every test point this collapses the Monte-Carlo credal set into a single
-distribution `p*` under three discrepancies — squared Euclidean distance (the
-plain MC mean), L1 distance and KL divergence (both solved with
-`scipy.optimize.minimize` under the simplex constraints) — and saves
-`all_p_star_{SED,L1,KLD}_{c,clean}_fold_{k}.npy` next to the tensors from
-step 2. It also prints the reward-sensitive accuracy per fold.
+For each test instance, outputs of the ensemble members are aggregated into a single probability
+distribution with three distances — squared Euclidean distance, L1 distance, and KL divergence. The distribution is saved as `all_p_star_{SED,L1,KLD}_{c,clean}_fold_{k}.npy` next to the tensors from
+step 2.
 
-`--model_type {Bayes,Drop_out}` and `--train_type {clean,noise}` select which
-step-2 outputs are read. `fmnist_` and `leaf_` variants take the same flags.
+`--model_type {Bayes,Drop_out}` and `--train_type {clean,noise}` are used to select the type of ensemble and the data it was trained with.
 
 ### 4. Set-valued (cautious) prediction
 
