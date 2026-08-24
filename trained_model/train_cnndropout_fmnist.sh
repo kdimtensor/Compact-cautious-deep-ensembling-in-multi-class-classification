@@ -1,0 +1,10 @@
+#!/bin/bash
+
+model=resnet18_dropout
+dropout_rate=0
+epochs=5
+modes="train"
+batch=256
+train_type='clean'
+
+CUDA_VISIBLE_DEVICES=0 python main_cnndropout_fmnist.py --model_name=$model --p=$dropout_rate --epochs=$epochs --mode=$modes  --batch_size=$batch --train-type=$train_type
