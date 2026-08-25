@@ -73,13 +73,13 @@ def evaluate(output, labels, n_class, save_dir, fold, test_type):
     # >>> Save test outputs >>>
 
     np.save(f'{save_dir}all_p_star_SED_{test_type}_fold_{fold}.npy', all_p_star_SED)
-    # np.save(f'{save_dir}predictions_SED_sensitive_{test_type}_fold_{fold}.npy', predictions_SED)
+    np.save(f'{save_dir}predictions_SED_sensitive_{test_type}_fold_{fold}.npy', predictions_SED)
 
     np.save(f'{save_dir}all_p_star_L1_{test_type}_fold_{fold}.npy', all_p_star_L1)
-    # np.save(f'{save_dir}predictions_L1_sensitive_{test_type}_fold_{fold}.npy', predictions_L1)
+    np.save(f'{save_dir}predictions_L1_sensitive_{test_type}_fold_{fold}.npy', predictions_L1)
 
     np.save(f'{save_dir}all_p_star_KLD_{test_type}_fold_{fold}.npy', all_p_star_KLD)
-    # np.save(f'{save_dir}predictions_KLD_sensitive_{test_type}_fold_{fold}.npy', predictions_KLD)
+    np.save(f'{save_dir}predictions_KLD_sensitive_{test_type}_fold_{fold}.npy', predictions_KLD)
 
     # <<< Save test output <<<
 
