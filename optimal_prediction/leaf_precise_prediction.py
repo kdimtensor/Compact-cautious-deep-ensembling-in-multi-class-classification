@@ -74,13 +74,13 @@ def evaluate(output, labels, n_class, save_dir, fold, test_type):
     # >>> Save test outputs >>>
 
     np.save(f'{save_dir}all_p_star_SED_{test_type}_fold_{fold}.npy', all_p_star_SED)
-    np.save(f'{save_dir}predictions_SED_sensitive_{test_type}_fold_{fold}.npy', predictions_SED)
+    np.save(f'{save_dir}predictions_SED_{test_type}_fold_{fold}.npy', predictions_SED)
 
     np.save(f'{save_dir}all_p_star_L1_{test_type}_fold_{fold}.npy', all_p_star_L1)
-    np.save(f'{save_dir}predictions_L1_sensitive_{test_type}_fold_{fold}.npy', predictions_L1)
+    np.save(f'{save_dir}predictions_L1_{test_type}_fold_{fold}.npy', predictions_L1)
 
     np.save(f'{save_dir}all_p_star_KLD_{test_type}_fold_{fold}.npy', all_p_star_KLD)
-    np.save(f'{save_dir}predictions_KLD_sensitive_{test_type}_fold_{fold}.npy', predictions_KLD)
+    np.save(f'{save_dir}predictions_KLD_{test_type}_fold_{fold}.npy', predictions_KLD)
 
     # <<< Save test output <<<
 
@@ -151,7 +151,6 @@ if __name__ == '__main__':
                         help="Training data condition of the loaded checkpoint (default: clean)")
     #######
 
-    print("sesitivities 3")
     m_metric = np.eye(39, dtype=float)
     
     # print(m_metric.size)

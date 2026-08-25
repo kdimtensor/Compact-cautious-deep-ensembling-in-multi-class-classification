@@ -125,7 +125,17 @@ step 2.
 
 `--model_type {Bayes,Drop_out}` and `--train_type {clean,noise}` are used to select the type of ensemble and the data it was trained with.
 
-### 4. Set-valued (cautious) prediction
+### 4. Calibration errors
+
+```bash
+cd optimal_prediction
+
+python cifar_calibration.py  --model_type Bayes --train_type clean
+python fmnist_calibration.py --model_type Bayes --train_type clean
+python leaf_calibration.py   --model_type Bayes --train_type clean
+```
+`--model_type {Bayes,Drop_out}` and `--train_type {clean,noise}` are used to select the type of ensemble and the data it was trained with.
+### 5. Set-valued (cautious) prediction
 
 ```bash
 python cifar_set_valued_prediction.py --model_type Bayes --train_type clean --test_type clean
