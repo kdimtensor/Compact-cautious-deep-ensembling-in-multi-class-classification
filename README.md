@@ -144,7 +144,7 @@ python fmnist_set_valued_prediction.py --model_type Drop_out --train_type noise 
 python leaf_set_valued_prediction.py --model_type Drop_out --train_type noise --test_type c
 ```
 
-Set-valued predictions can be made with or without reward sensitivity. Use --model_type to change between Bayes/Drop_out, --train_type to select models trained with clean/noise dataset, and --test_type to test the models with clean/c (clean or noisy dataset). Results
+Set-valued predictions can be made with or without reward sensitivity. Use `--model_type {Bayes,Drop_out}` to select the type of ensemble, `--train_type {clean,noise}` to select the type of dataset it was trained with, and `--test_type {clean/c}` to test the models with clean or noisy dataset. Results
 are averaged over the 3 folds and written as `mean : std` strings to:
 
 ```
