@@ -127,20 +127,17 @@ def evaluate(args, model, device, test_loader, save_dir, fold, dataset_type):
     with torch.no_grad():
         pred_probs_mc = []
         for data, target in test_loader:
-            # data, target = data.to(device), target.to(device)
             if torch.cuda.is_available():
                 data, target = data.cuda(), target.cuda()
             else:
                 data, target = data.cpu(), target.cpu()
-            for mc_run in range(args.num_monte_carlo):                
-                # output, _ = model.forward(data)
+            for mc_run in range(args.num_monte_carlo): 
                 output, _ = model(data)
                 #get probabilities from log-prob
                 pred_probs = torch.exp(output)
                 pred_probs_mc.append(pred_probs.cpu().data.numpy())
                 
         labels = target.cpu().data.numpy()
-        # labels_onehot <class 'numpy.ndarray'> (10000, 10)
         labels_onehot = torch.nn.functional.one_hot(target).data.cpu().numpy()        
 
         # >>> Original Squared Euclidean distance >>>
@@ -399,9 +396,6 @@ def main():
             evaluate(args, model, device, val_loader_c, args.save_dir, fold, 'c')
             evaluate(args, model, device, val_loader_clean, args.save_dir, fold, 'clean')
 
-        # print(kfold_results_c)
-        # print('-'*11)
-        # print(kfold_results_clean)        
 
 def save_checkpoint(state, is_best, filename='checkpoint.pth.tar'):
     """
