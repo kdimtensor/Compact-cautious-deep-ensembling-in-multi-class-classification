@@ -165,27 +165,6 @@ data/LEAF/
 └── ...            # 39 class directories
 ```
 
-**Corruption.** A single corruption type is used: additive Gaussian noise,
-`clip(x/255 + N(0, σ), 0, 1) · 255`, with
-`σ ∈ {0.04, 0.06, 0.08, 0.09, 0.10}` for severities 1…5.
-`make_cifar_c.py` / `make_fmnist_c.py` generate and stack all five severities
-into `gaussian_noise_1_6/`; `split_fold_*.py` then keeps only the last block —
-the strongest noise, `σ = 0.10`, referred to as *severity 6* in the directory
-names — and writes it to `gaussian_noise_6/`. `make_leaf_c.py` skips the stack
-and generates that severity directly.
-
-**Folds.** The clean and corrupted copies share one index space, so a single
-`KFold(n_splits=3, shuffle=True, random_state=42)` over the pooled
-train+test set gives the indices used by every model and every stage. They are
-stored once, in `data/<DATA>-C/k_fold_id/`, and re-loaded by the training,
-testing and evaluation scripts.
-
-| | stacked (5 severities) | kept (severity 6) | pooled for CV | per fold (train / test) |
-| --- | --- | --- | --- | --- |
-| CIFAR-10 | 250,000 train + 50,000 test | 50,000 + 10,000 | 60,000 | 40,000 / 20,000 |
-| Fashion-MNIST | 300,000 train + 50,000 test | 60,000 + 10,000 | 70,000 | ≈46,667 / ≈23,333 |
-| LEAF | — (severity 6 only) | all images (train split only) | all images | 2/3 / 1/3 |
-
 Resulting layout (everything under `data/` is generated and should stay out of
 version control):
 
@@ -211,7 +190,7 @@ main/
 ├── environment.yml                     # exact conda environment (Python 3.10, torch 2.8)
 ├── requirements.txt                    # minimal pip dependencies
 │
-├── data_preprocess/                    # Step 1 — corruption + cross-validation folds
+├── data_preprocessing/                    # Step 1 — corruption + cross-validation folds
 │   ├── <cifar|fmnist|leaf>_data_preparation.sh   # runs the two scripts below
 │   ├── make_cifar_c.py                 # Gaussian noise, severities 1-5, clean/noisy .npy pairs
 │   ├── make_fmnist_c.py
@@ -223,7 +202,7 @@ main/
 │   ├── fmnist_c.py                     # FMNISTC  / FMNISTCLEAN
 │   └── leaf_c.py                       # LEAFC    / LEAFCLEAN
 │
-├── trained_model/                      # Step 2 — training + Monte-Carlo inference
+├── model_training/                      # Step 2 — training + Monte-Carlo inference
 │   ├── main_bayesian_cifar.py          # variational ResNet-20 (bayesian-torch), ELBO = CE + KL/batch
 │   ├── main_bayesian_fmnist.py         # variational SCNN (bayesian-torch)
 │   ├── main_bayesian_leaf.py           # variational ResNet [3,3,3], 39 classes
@@ -239,7 +218,7 @@ main/
 │   ├── saved_loss.py                   # per-epoch loss/accuracy → CSV
 │   └── utils.py                        # dataset mean/std, init helpers
 │
-├── Optimal_prediction/                 # Steps 3-4 — decision making on the credal set
+├── optimal_prediction/                 # Steps 3-4 — decision making on the
 │   ├── cifar_precise_prediction.py     # p* under SED / L1 / KLD  → all_p_star_*.npy
 │   ├── fmnist_precise_prediction.py
 │   ├── leaf_precise_prediction.py
