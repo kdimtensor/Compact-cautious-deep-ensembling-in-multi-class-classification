@@ -56,6 +56,14 @@ bash test_bayesian_cifar.sh
 # Convolutional neural network with Monte-Carlo dropout
 bash train_cnndropout_cifar.sh    # then
 bash test_cnndropout_cifar.sh
+
+# Bayesian neural network
+bash train_bayesian_fmnist.sh      # then
+bash test_bayesian_fmnist.sh
+
+# Convolutional neural network with Monte-Carlo dropout
+bash train_cnndropout_leaf.sh    # then
+bash test_cnndropout_leaf.sh
 ```
 
 Training loops over the 3 folds
