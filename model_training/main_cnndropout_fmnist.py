@@ -82,7 +82,6 @@ def evaluate(model, val_loader, save_dir, fold, dataset_type):
                 pred_probs_mc.append(pred_probs.cpu().data.numpy())
                 
         labels = target.cpu().data.numpy()
-        # labels_onehot <class 'numpy.ndarray'> (10000, 10)
         labels_onehot = torch.nn.functional.one_hot(target).data.cpu().numpy()        
 
         # >>> Original Squared Euclidean distance >>>
@@ -111,13 +110,11 @@ def train(epoch, model_fold, train_loader,optimizer):
 
     for batch_idx, (inputs, targets) in enumerate(train_loader):
         inputs, targets = inputs.to(device), targets.to(device)
-        # print(inputs.shape)
         optimizer.zero_grad()
         outputs = model_fold(inputs)
         outputs_mean = outputs
         loss = F.nll_loss(outputs_mean, targets)
 
-        # print(loss)
         loss.backward()
         optimizer.step()
 
@@ -275,7 +272,6 @@ def main():
             best_prec1_noise = 0
             best_prec1_clean = 0
             ####
-            # output_loss = saved_loss.loss_out(args.save_dir +f'bayesian_{args.model_name}_cifar_fold_{fold}.csv')
             output_loss = saved_loss.loss_out(args.save_dir + f'bayesian_{args.model_name}_cifar_fold_{fold}.csv')
             ####
             for epoch in range(1, args.epochs):
@@ -391,8 +387,7 @@ def main():
         for fold in range(k_folds):
             print(f'FOLD {fold}')
             print('--------------------------------')
-                        
-            # test_ids = np.load(f'{save_dir}test_ids_fold_{fold}.npy')
+            
             test_ids = np.load(root_dir + f'/data/{data_name}/k_fold_id/test_ids_fold_{fold}.npy')
             
             val_subset_c = Subset(dataset_all_c, test_ids)           
