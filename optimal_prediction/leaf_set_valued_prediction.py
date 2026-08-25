@@ -78,7 +78,6 @@ def cal_set_value_prediction(all_p_star_SED_sensitive,
     alpha_KLD_predictions = []
 
     for i in range(len(all_p_star_SED_sensitive)):
-        # probability_set = output[:,i,:] #(100,10)
 
         # >>> Squared Euclidean distance >>>
 
