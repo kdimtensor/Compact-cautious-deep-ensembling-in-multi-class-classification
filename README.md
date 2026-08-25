@@ -44,6 +44,14 @@ Each script runs `make_<dataset>_c.py` (adds Gaussian noise, saves clean/noisy
 `.npy` pairs) followed by `split_fold_<dataset>.py` (writes the 3-fold indices). See [Datasets](#datasets) for what
 lands on disk.
 
+**Corruption.** A single corruption type is used: additive Gaussian noise, which can be added with 5 levels of severity. The highest severity 5 is used by default.
+
+**Folds.** The clean and corrupted copies share one index space, so a single
+`KFold(n_splits=3, shuffle=True, random_state=42)` over the pooled
+train+test set gives the indices used by every model and every stage. They are
+stored once, in `data/<DATA>-C/k_fold_id/`, and re-loaded by the training,
+testing and evaluation scripts.
+
 ### 2. Train and save models
 
 ```bash
