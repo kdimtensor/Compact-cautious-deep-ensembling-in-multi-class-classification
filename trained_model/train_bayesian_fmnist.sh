@@ -1,8 +1,8 @@
 # !/bin/csh
 
-lr=0.01
+lr=0.1
 batch_size=256
-epochs=5
+epochs=50
 mode='train'
 train_type='clean'
 

@@ -134,7 +134,7 @@ def evaluate(args, model, val_loader, fold, dataset_type,save_dir):
     eval_results = []
     model.eval()
     with torch.no_grad():
-        begin = time.time()
+
         for data, target in tqdm(val_loader):
             if torch.cuda.is_available():
                 data, target = data.cuda(), target.cuda()
@@ -174,6 +174,7 @@ def main():
     # >>> K_fold cross validation config >>>
     k_folds = args.k_fold
     train_type = args.train_type
+    torch.manual_seed(args.seed)
     # <<< K_fold cross validation config <<<
     #############
     
@@ -494,6 +495,11 @@ if __name__ == '__main__':
                         metavar='N',
                         help='number of Monte Carlo runs during training')
 
+    parser.add_argument('--seed',
+                            type=int,
+                            default=42,
+                            metavar='S',
+                            help='random seed (default: 42)')
     parser.add_argument(
         '--num_classes',
         type=int,

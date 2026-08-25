@@ -29,12 +29,12 @@ if __name__ == "__main__":
     print(len(label_train))
     print('-'*8)
 
-    np.save(root + f'data/{data_name}/gaussian_noise_6/train_clean/gaussian_noise_train_clean.npy', np.array(data_clean_train_6).astype(np.uint8))
+    np.save(root + f'data/{data_name}/gaussian_noise_6/train_clean/gaussian_noise_train_clean.npy', np.array(data_clean_train).astype(np.uint8))
 
-    np.save(root+ f'data/{data_name}/gaussian_noise_6/train/gaussian_noise_train.npy', np.array(data_c_train_6).astype(np.uint8))
+    np.save(root+ f'data/{data_name}/gaussian_noise_6/train/gaussian_noise_train.npy', np.array(data_c_train).astype(np.uint8))
 
     np.save(root + f'data/{data_name}/gaussian_noise_6/label/label_train.npy',
-            np.array(label_train_6).astype(np.uint8))
+            np.array(label_train).astype(np.uint8))
 
     # <<< Get severity 6 <<<
 

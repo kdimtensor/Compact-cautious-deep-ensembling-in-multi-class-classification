@@ -2,7 +2,7 @@
 
 model=resnet18_dropout
 dropout_rate=0
-epochs=5
+epochs=50
 modes="train"
 batch=128
 train_type='clean'

@@ -455,9 +455,9 @@ if __name__ == '__main__':
                         help='disables CUDA training')
     parser.add_argument('--seed',
                         type=int,
-                        default=1,
+                        default=42,
                         metavar='S',
-                        help='random seed (default: 1)')
+                        help='random seed (default: 42)')
     
     parser.add_argument('--save_dir',
                         type=str,

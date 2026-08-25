@@ -198,6 +198,7 @@ def main():
     # <<< K_fold cross validation config <<<
     
     #############
+    torch.manual_seed(args.seed)
     train_type = args.train_type
     root_dir = ".."
     print(train_type)
@@ -506,7 +507,7 @@ if __name__ == '__main__':
     parser.add_argument('--model_name', default='resnet18', type=str,  
                         help='model to train')
 
-    parser.add_argument('--lr', default=0.001, type=float, help='learning rate')
+    parser.add_argument('--lr', default=0.01, type=float, help='learning rate')
 
     parser.add_argument('--batch_size', default=128, type=int, 
                         help='size of training batch')
@@ -529,7 +530,11 @@ if __name__ == '__main__':
                         help='number of monte carlo')
 
     parser.add_argument('--mode', type=str, required=True, help='train | test')
-
+    parser.add_argument('--seed',
+                            type=int,
+                            default=42,
+                            metavar='S',
+                            help='random seed (default: 42)')
     parser.add_argument('--train-type',
                             dest='train_type',
                             type=str,

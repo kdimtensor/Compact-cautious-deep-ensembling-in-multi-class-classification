@@ -177,6 +177,7 @@ def main():
     #############
     root_dir = ".."
     train_type = args.train_type
+    torch.manual_seed(args.seed)
     print(train_type)
     data_name = "FMNIST-10-C"
     print(data_name)
@@ -473,7 +474,7 @@ if __name__ == '__main__':
                             metavar='M',
                             help='Learning rate step gamma (default: 0.7)')
 
-    parser.add_argument('--lr', default=0.001, type=float, help='learning rate')
+    parser.add_argument('--lr', default=0.1, type=float, help='learning rate')
 
     parser.add_argument('--batch_size', default=128, type=int, 
                         help='size of training batch')
@@ -502,6 +503,12 @@ if __name__ == '__main__':
                                 default='clean',
                                 choices=['noise', 'clean'],
                                 help='type of training data: noise | clean (default: clean)')
+    parser.add_argument('--seed',
+                            type=int,
+                            default=42,
+                            metavar='S',
+                            help='random seed (default: 42)')
+    
     parser.add_argument('--k-fold',
                         dest='k_fold',
                         type=int,

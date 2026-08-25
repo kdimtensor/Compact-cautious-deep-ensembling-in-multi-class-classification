@@ -178,6 +178,7 @@ def main():
     #############
     root_dir = ".."
     train_type = args.train_type
+    torch.manual_seed(args.seed)
     print(train_type)
     data_name = "LEAF-C"
     print(data_name)
@@ -463,6 +464,12 @@ if __name__ == '__main__':
                             default='clean',
                             choices=['noise', 'clean'],
                             help='type of training data: noise | clean (default: clean)')
+    parser.add_argument('--seed',
+                            type=int,
+                            default=42,
+                            metavar='S',
+                            help='random seed (default: 42)')
+    
     parser.add_argument('--k-fold',
                         dest='k_fold',
                         type=int,

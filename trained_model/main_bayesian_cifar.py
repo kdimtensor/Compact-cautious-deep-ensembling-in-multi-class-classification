@@ -573,6 +573,11 @@ if __name__ == '__main__':
                             type=int,
                             metavar='N',
                             help='print frequency (default: 20)')
+    parser.add_argument('--seed',
+                            type=int,
+                            default=42,
+                            metavar='S',
+                            help='random seed (default: 42)')
     parser.add_argument('--mode', type=str, required=True, help='train | test')
     parser.add_argument(
         '--num_monte_carlo',
