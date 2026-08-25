@@ -126,8 +126,6 @@ def validate(args, val_loader, model, criterion, epoch, tb_writer=None):
     return losses.avg, top1.avg
 
 def evaluate(args, model, val_loader, fold, dataset_type,save_dir):
-    # --batch-size=$batch_size 
-    # --num_monte_carlo=$num_monte_carlo
     args.num_monte_carlo = 100
     output_list = []
     labels_list = []
@@ -150,8 +148,7 @@ def evaluate(args, model, val_loader, fold, dataset_type,save_dir):
 
         output = torch.cat(output_list, dim=1)
         output = torch.nn.functional.softmax(output, dim=2)
-        labels = torch.cat(labels_list)      
-        # labels_onehot <class 'numpy.ndarray'> (10000, 10)
+        labels = torch.cat(labels_list)
         labels_onehot = torch.nn.functional.one_hot(labels).data.cpu().numpy()
 
         # >>> Original Squared Euclidean distance >>>
@@ -199,10 +196,6 @@ def main():
 
     criterion = nn.CrossEntropyLoss().to(device)
 
-    # if args.evaluate:
-    #     validate(val_loader, model, criterion)
-    #     return
-
     ####
     print(root_dir + f'/data/{data_name}/gaussian_{train_type}_fold/')
     print(args.epochs)
@@ -237,7 +230,6 @@ def main():
         for fold in range(k_folds):
             print(f'FOLD {fold}')
             print('--------------------------------')
-            # save_filename = f'bayesian_{args.arch}_cifar_fold_{fold}.pth'
             train_ids = np.load(root_dir + f'/data/{data_name}/k_fold_id/train_ids_fold_{fold}.npy')
             test_ids = np.load(root_dir + f'/data/{data_name}/k_fold_id/test_ids_fold_{fold}.npy')
             
@@ -362,8 +354,7 @@ def main():
         for fold in range(k_folds):
             print(f'FOLD {fold}')
             print('--------------------------------')
-                        
-            # test_ids = np.load(f'{save_dir}test_ids_fold_{fold}.npy')
+            
             test_ids = np.load(root_dir + f'/data/{data_name}/k_fold_id/test_ids_fold_{fold}.npy')
             
             val_subset_c = Subset(dataset_all_c, test_ids)           
