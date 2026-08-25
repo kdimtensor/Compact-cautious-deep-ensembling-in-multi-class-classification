@@ -42,11 +42,6 @@ def find_a_range(n_class,num_out = 10):
 
 
 def idc(p_star_sensitive, classes, n_class, alpha):
-    # Here uses p_star vector multiply m_metric matrix
-    # in case m_metric is anti-symetry
-    # DONT DO IT HERE
-    # p_star_m_metric = np.matmul(p_star, m_metric)
-    # p_star_m_metric = p_star
     # Sort descending
     class_order = np.argsort(-p_star_sensitive)
 
