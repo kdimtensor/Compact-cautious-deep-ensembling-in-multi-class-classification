@@ -101,8 +101,7 @@ def evaluate(model, val_loader, save_dir, fold, dataset_type,args):
         output = torch.nn.functional.softmax(output, dim=2)
 
         ####
-        labels = torch.cat(labels_list)      
-        # labels_onehot <class 'numpy.ndarray'> (10000, 10)
+        labels = torch.cat(labels_list)
         labels_onehot = torch.nn.functional.one_hot(labels).data.cpu().numpy()
 
         # >>> Original Squared Euclidean distance >>>
@@ -119,8 +118,6 @@ def evaluate(model, val_loader, save_dir, fold, dataset_type,args):
 ############
 # Training
 def train(epoch, model_fold, train_loader,criterion,optimizer,args):
-
-    # print('\nEpoch: {} ==> lr: {}'.format(epoch, scheduler.get_last_lr()))
     model_fold.train()
     losses = AverageMeter()
     top1 = AverageMeter()
@@ -286,7 +283,6 @@ def main():
 
             os.makedirs(args.save_dir,exist_ok=True)
             os.makedirs(args.save_dir + 'model',exist_ok=True)
-            # save_filename = f'bayesian_{args.arch}_cifar_fold_{fold}.pth'
             train_ids = np.load(root_dir + f'/data/CIFAR-10-C/k_fold_id/train_ids_fold_{fold}.npy')
             test_ids = np.load(root_dir + f'/data/CIFAR-10-C/k_fold_id/test_ids_fold_{fold}.npy')
             
