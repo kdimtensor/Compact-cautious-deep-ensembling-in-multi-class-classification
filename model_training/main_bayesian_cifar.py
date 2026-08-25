@@ -149,8 +149,6 @@ def validate(args, val_loader, model, criterion, epoch, tb_writer=None):
 # with y_true on columns and y_predicted on rows.
 
 def evaluate(args, model, val_loader, fold, dataset_type,save_dir):
-    # --batch-size=$batch_size 
-    # --num_monte_carlo=$num_monte_carlo
 
     output_list = []
     labels_list = []
@@ -172,13 +170,9 @@ def evaluate(args, model, val_loader, fold, dataset_type,save_dir):
         output = torch.cat(output_list, dim=1)
         output = torch.nn.functional.softmax(output, dim=2)
         labels = torch.cat(labels_list)      
-        # labels_onehot <class 'numpy.ndarray'> (10000, 10)
         labels_onehot = torch.nn.functional.one_hot(labels).data.cpu().numpy()
 
         # >>> Original Squared Euclidean distance >>>
-
-        # pred_mean shape torch.Size([10000, 10])
-        # all_p_star_SED = pred_mean
 
         np.save(save_dir + f'tensor_output_{dataset_type}_fold_{fold}.npy', output.data.cpu().numpy())
         np.save(save_dir + f'test_labels_{dataset_type}_fold_{fold}.npy', labels.data.cpu().numpy())        
@@ -231,9 +225,6 @@ def main():
 
     global args, best_prec1_noise,best_prec1_clean
     args = parser.parse_args()
-    # >>> K_fold cross validation config >>>
-    
-    # <<< K_fold cross validation config <<<
 
     #############
     k_folds = args.k_fold
@@ -270,10 +261,6 @@ def main():
     if args.arch in ['resnet110']:
         for param_group in optimizer.param_groups:
             param_group['lr'] = args.lr * 0.1
-
-    # if args.evaluate:
-    #     validate(val_loader, model, criterion)
-    #     return
 
     ####
     print(data_path + f'gaussian_{train_type}_fold/')
