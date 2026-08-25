@@ -122,11 +122,11 @@ step 2.
 ```bash
 python cifar_set_valued_prediction.py --model_type Bayes --train_type clean --test_type clean
 python cifar_set_valued_prediction.py --model_type Bayes --train_type clean --test_type c
-python fmnist_set_valued_prediction.py --model_type Drop_out --train_type c --test_type clean
-python leaf_set_valued_prediction.py --model_type Drop_out --train_type c --test_type c
+python fmnist_set_valued_prediction.py --model_type Drop_out --train_type noise --test_type clean
+python leaf_set_valued_prediction.py --model_type Drop_out --train_type noise --test_type c
 ```
 
-Set-valued predictions can be made with or without reward sensitivity. Use --model_type to change between Bayes/Drop_out, --train_type to select models trained with clean/c dataset, and --test_type to test the models with clean/c (clean or noisy dataset) Results
+Set-valued predictions can be made with or without reward sensitivity. Use --model_type to change between Bayes/Drop_out, --train_type to select models trained with clean/noise dataset, and --test_type to test the models with clean/c (clean or noisy dataset). Results
 are averaged over the 3 folds and written as `mean : std` strings to:
 
 ```
