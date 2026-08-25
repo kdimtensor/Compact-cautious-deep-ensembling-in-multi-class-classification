@@ -157,11 +157,6 @@ data/LEAF/
 └── ...            # 39 class directories
 ```
 
-`make_leaf_c.py` exits with a message if `data/LEAF/` is missing, and writes the
-class order it discovered to
-`data/LEAF-C/gaussian_noise_1_6/output.txt` (Fashion-MNIST likewise gets a
-`label_list.txt`) — the label indices used everywhere downstream.
-
 **Corruption.** A single corruption type is used: additive Gaussian noise,
 `clip(x/255 + N(0, σ), 0, 1) · 255`, with
 `σ ∈ {0.04, 0.06, 0.08, 0.09, 0.10}` for severities 1…5.
