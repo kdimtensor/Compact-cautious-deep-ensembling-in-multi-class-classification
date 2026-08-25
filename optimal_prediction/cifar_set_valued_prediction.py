@@ -578,7 +578,6 @@ if __name__ == '__main__':
                             help="test data condition (default: clean , noise - c)")
         
 
-    print("sesitivities 1")
     m_metric = np.array([
         [1.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
         [0.00, 1.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.25],
