@@ -132,12 +132,11 @@ are averaged over the 3 folds and written as `mean : std` strings to:
 ```
 data/<DATA>-C/gaussian_<train_type>_fold/<model_type>/set_output/
     <test_type>_set_value_prediction.csv   # one column per α
-    <test_type>_set_value_prediction.txt   # the α values that were swept
 ```
 
 ## Datasets
 
-Three image dataset are used, each in a clean and a
+Three image datasets are used, each in a clean and a
 Gaussian-corrupted version of the same images with the same labels,
 so that a model can be trained on one stream and evaluated on both.
 
