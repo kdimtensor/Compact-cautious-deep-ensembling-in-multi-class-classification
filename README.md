@@ -62,6 +62,14 @@ bash train_bayesian_fmnist.sh      # then
 bash test_bayesian_fmnist.sh
 
 # Convolutional neural network with Monte-Carlo dropout
+bash train_cnndropout_fmnist.sh    # then
+bash test_cnndropout_fmnist.sh
+
+# Bayesian neural network
+bash train_bayesian_leaf.sh      # then
+bash test_bayesian_leaf.sh
+
+# Convolutional neural network with Monte-Carlo dropout
 bash train_cnndropout_leaf.sh    # then
 bash test_cnndropout_leaf.sh
 ```
