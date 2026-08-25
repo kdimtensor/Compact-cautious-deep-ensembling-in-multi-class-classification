@@ -11,14 +11,12 @@ def evaluate(output, labels, n_class, save_dir, fold, test_type):
 
     # >>> Squared Euclidean distance >>>
 
-    # pred_mean shape ([10000, 10])
-    # all_p_star_SED = pred_mean
     all_p_star_SED = np.mean(output, axis=0)    
 
     # <<< Squared Euclidean distance <<<
 
     for i in range(len(labels)):
-        probability_set = output[:,i,:] #(100,10)
+        probability_set = output[:,i,:]
 
         # >>> L1_distance >>>
 
@@ -30,7 +28,6 @@ def evaluate(output, labels, n_class, save_dir, fold, test_type):
         result = minimize(L1_distance, np.ones(n_class)/n_class, args=(probability_set,), constraints=constraints)    
         p_star_L1 = result.x
 
-        # all_p_star_L1 shape [10000, 10]
         all_p_star_L1[i] = p_star_L1
 
         # <<< L1_distance <<<
@@ -42,7 +39,6 @@ def evaluate(output, labels, n_class, save_dir, fold, test_type):
             p_star_KLD = np.where(p_star_KLD < epsilon, epsilon, p_star_KLD)
             probability_set = np.where(probability_set < epsilon, epsilon, probability_set)
             return np.sum(p_star_KLD * np.log(p_star_KLD/probability_set))
-            # return np.sum(probability_set * np.log(probability_set/p_star_KLD))
 
         constraints = [{'type': 'eq', 'fun': lambda x: np.sum(x) - 1},
                                 {'type': 'ineq', 'fun': lambda x: x}]
@@ -52,7 +48,6 @@ def evaluate(output, labels, n_class, save_dir, fold, test_type):
         epsilon = 1e-10
         p_star_KLD = np.where(p_star_KLD < epsilon, epsilon, p_star_KLD)
 
-        # all_p_star_KLD shape [10000, 10]
         all_p_star_KLD[i] = p_star_KLD
 
         # <<< KL_divergence <<<     
